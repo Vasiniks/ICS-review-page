@@ -350,7 +350,7 @@
             color: #cbd5e1;
         }
 
-        /* Blacked out spoilers */
+        /* Spoiler System with Overlays */
         .spoiler-container {
             background-color: var(--container-bg);
             border: 1px solid var(--border-color);
@@ -360,39 +360,45 @@
         }
 
         .spoiler-box {
-            background-color: #000;
-            color: #000;
-            padding: 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            user-select: none;
+            background-color: var(--code-bg);
             border: 1px dashed var(--accent);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
             margin-top: 1rem;
-        }
-
-        .spoiler-box::before {
-            content: "⚠️ Click to reveal answer and trace steps";
-            display: block;
-            text-align: center;
-            color: var(--accent);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
         .spoiler-box.revealed {
-            background-color: var(--code-bg);
-            color: var(--text-color);
-            cursor: default;
-            user-select: text;
             border-style: solid;
             border-color: var(--border-color);
+            cursor: default;
         }
 
-        .spoiler-box.revealed::before {
-            display: none;
+        .spoiler-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(9, 13, 22, 0.98);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1rem;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .spoiler-box.revealed .spoiler-overlay {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .grid-sketch {
@@ -490,7 +496,7 @@
                 <!-- BUBBLE: DATA TYPES -->
                 <div class="bubble-card">
                     <div class="bubble-title">Variable Data Types</div>
-                    <p>Python variables hold values in distinct memory types. The main structures are:</p>
+                    <p>Python stores data in distinct memory types. The main four structures are:</p>
                     <ul>
                         <li><code>int</code>: Whole values (e.g. <code>10</code>, <code>-5</code>).</li>
                         <li><code>float</code>: Decimal fractional numbers (e.g. <code>3.14</code>, <code>-0.5</code>).</li>
@@ -533,7 +539,7 @@
                             </tr>
                             <tr>
                                 <td><code>%</code></td>
-                                <td>Modulo (returns remainder left over)</td>
+                                <td>Modulo (remainder after division)</td>
                                 <td><code>5 % 2</code></td>
                                 <td style="color: var(--primary); font-weight: 700;"><code>1</code></td>
                             </tr>
@@ -727,10 +733,10 @@ submit_button["state"] = DISABLED</code></pre>
                 <div class="bubble-card">
                     <div class="bubble-title">Detailed Widget Explanations & Initialization</div>
                     
-                    <p><strong>1. Label:</strong> Shows static text or updates dynamically via <code>textvariable</code>.</p>
+                    <p><strong>1. Label:</strong> Shows static text or updates via <code>textvariable</code>.</p>
                     <pre><code class="language-python"># text: static string
 # font: tuple of (font_name, size, weight)
-my_label = Label(mainframe, text="Static Text", font=("Courier", 12, "bold"))
+my_label = Label(mainframe, text="Static Text", font=("Arial", 12, "bold"))
 
 # textvariable: links to StringVar to auto-update
 name_var = StringVar()
@@ -815,7 +821,7 @@ img_label = Label(mainframe, image=flag_img)
             <!-- SPOILER QUESTIONS -->
             <div class="spoiler-container">
                 <h2>Short Coding & Tracing Challenges (10 Questions)</h2>
-                <p>Click each black box to reveal the tracing walkthrough or code solution.</p>
+                <p style="margin-bottom: 2rem;">Click the cards below to fade the overlay and reveal answers.</p>
             </div>
 
             <!-- SP1 -->
@@ -823,8 +829,9 @@ img_label = Label(mainframe, image=flag_img)
                 <h3>Challenge 1: Basic Math & Output Formatting</h3>
                 <p>Write a code snippet that prompts the user for a price (decimal) and outputs it formatted as <code>"Total is $XX.XX"</code> with exactly 2 decimal places.</p>
                 <div class="spoiler-box" onclick="revealSpoiler(this)">
-<strong>Answer Code:</strong>
-<pre><code class="language-python">price = float(input("Enter price: "))
+                    <div class="spoiler-overlay">⚠️ Click to reveal answer and trace steps</div>
+                    <strong>Answer Code:</strong>
+                    <pre><code class="language-python">price = float(input("Enter price: "))
 print(f"Total is ${price:.2f}")</code></pre>
                 </div>
             </div>
@@ -834,8 +841,9 @@ print(f"Total is ${price:.2f}")</code></pre>
                 <h3>Challenge 2: Odd/Even String Filter Loop</h3>
                 <p>Write a function <code>filter_even_chars(s)</code> that takes a string and returns a new string containing only characters at even indices.</p>
                 <div class="spoiler-box" onclick="revealSpoiler(this)">
-<strong>Answer Code:</strong>
-<pre><code class="language-python">def filter_even_chars(s):
+                    <div class="spoiler-overlay">⚠️ Click to reveal answer and trace steps</div>
+                    <strong>Answer Code:</strong>
+                    <pre><code class="language-python">def filter_even_chars(s):
     result = ""
     for i in range(len(s)):
         if i % 2 == 0:
@@ -853,8 +861,9 @@ def filter_even_chars_slice(s):
                 <h3>Challenge 3: Scale Callback Payout</h3>
                 <p>Write a callback function <code>calculate_payout(val)</code> bound to a Tkinter Scale widget. The base wage is stored in <code>wage_var</code> (StringVar). The hours worked is bound to <code>hours_var</code> (IntVar). Overtime (hours > 40) is paid at 1.5x. Display results in <code>salary_var</code> (StringVar) formatted as <code>"$XX.XX"</code>.</p>
                 <div class="spoiler-box" onclick="revealSpoiler(this)">
-<strong>Answer Code:</strong>
-<pre><code class="language-python">def calculate_payout(val):
+                    <div class="spoiler-overlay">⚠️ Click to reveal answer and trace steps</div>
+                    <strong>Answer Code:</strong>
+                    <pre><code class="language-python">def calculate_payout(val):
     rate = float(wage_var.get())
     hours = hours_var.get()
     
@@ -873,8 +882,9 @@ def filter_even_chars_slice(s):
                 <h3>Challenge 4: List Average Calculation</h3>
                 <p>Write a function <code>list_average(some_list)</code> that calculates and returns the average of all numbers in a list using the built-in functions <code>sum()</code> and <code>len()</code>.</p>
                 <div class="spoiler-box" onclick="revealSpoiler(this)">
-<strong>Answer Code:</strong>
-<pre><code class="language-python">def list_average(some_list):
+                    <div class="spoiler-overlay">⚠️ Click to reveal answer and trace steps</div>
+                    <strong>Answer Code:</strong>
+                    <pre><code class="language-python">def list_average(some_list):
     if len(some_list) == 0:
         return 0
     return sum(some_list) / len(some_list)</code></pre>
@@ -886,8 +896,9 @@ def filter_even_chars_slice(s):
                 <h3>Challenge 5: OptionMenu Callback Selector</h3>
                 <p>Write a Tkinter OptionMenu callback function <code>category_selected(val)</code>. If the selected value is <code>"Burgers"</code>, set <code>menu_var</code> (StringVar) to <code>"McDouble, Big Mac"</code>. If it is <code>"Drinks"</code>, set it to <code>"Coke, Sprite"</code>.</p>
                 <div class="spoiler-box" onclick="revealSpoiler(this)">
-<strong>Answer Code:</strong>
-<pre><code class="language-python">def category_selected(val):
+                    <div class="spoiler-overlay">⚠️ Click to reveal answer and trace steps</div>
+                    <strong>Answer Code:</strong>
+                    <pre><code class="language-python">def category_selected(val):
     # Note: val argument is passed automatically by OptionMenu
     if val == "Burgers":
         menu_var.set("McDouble, Big Mac")
@@ -905,19 +916,20 @@ lbl2.grid(row=2, column=1)
 entry1.grid(row=2, column=2)
 btn1.grid(row=3, column=1, columnspan=2)</code></pre>
                 <div class="spoiler-box" onclick="revealSpoiler(this)">
-<strong>Layout Diagram:</strong>
-<table class="grid-sketch">
-    <tr>
-        <td colspan="2" class="spanned">lbl1 (Row 1, spans Columns 1 & 2)</td>
-    </tr>
-    <tr>
-        <td>lbl2 (Row 2, Col 1)</td>
-        <td>entry1 (Row 2, Col 2)</td>
-    </tr>
-    <tr>
-        <td colspan="2" class="spanned">btn1 (Row 3, spans Columns 1 & 2)</td>
-    </tr>
-</table>
+                    <div class="spoiler-overlay">⚠️ Click to reveal answer and trace steps</div>
+                    <strong>Layout Diagram:</strong>
+                    <table class="grid-sketch">
+                        <tr>
+                            <td colspan="2" class="spanned">lbl1 (Row 1, spans Columns 1 & 2)</td>
+                        </tr>
+                        <tr>
+                            <td>lbl2 (Row 2, Col 1)</td>
+                            <td>entry1 (Row 2, Col 2)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="spanned">btn1 (Row 3, spans Columns 1 & 2)</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
@@ -930,16 +942,17 @@ print(s[1:6:2])
 print(s[-3:])
 print(s[::3])</code></pre>
                 <div class="spoiler-box" onclick="revealSpoiler(this)">
-<strong>Outputs:</strong>
-<pre><code>ipo
+                    <div class="spoiler-overlay">⚠️ Click to reveal answer and trace steps</div>
+                    <strong>Outputs:</strong>
+                    <pre><code>ipo
 mus
 hpas</code></pre>
-<strong>Step Trace Walkthrough:</strong>
-<ul>
-    <li><code>s[1:6:2]</code>: index range 1 to 5 is <code>"ippop"</code>. Step 2 selects indices 1 (<code>i</code>), 3 (<code>p</code>), and 5 (<code>o</code>). Result: <code>ipo</code>.</li>
-    <li><code>s[-3:]</code>: last 3 characters. Result: <code>mus</code>.</li>
-    <li><code>s[::3]</code>: indices 0 (<code>h</code>), 3 (<code>p</code>), 6 (<code>a</code>), 9 (<code>s</code>). Result: <code>hpas</code>.</li>
-</ul>
+                    <strong>Step Trace Walkthrough:</strong>
+                    <ul>
+                        <li><code>s[1:6:2]</code>: index range 1 to 5 is <code>"ippop"</code>. Step 2 selects indices 1 (<code>i</code>), 3 (<code>p</code>), and 5 (<code>o</code>). Result: <code>ipo</code>.</li>
+                        <li><code>s[-3:]</code>: last 3 characters. Result: <code>mus</code>.</li>
+                        <li><code>s[::3]</code>: indices 0 (<code>h</code>), 3 (<code>p</code>), 6 (<code>a</code>), 9 (<code>s</code>). Result: <code>hpas</code>.</li>
+                    </ul>
                 </div>
             </div>
 
@@ -954,14 +967,15 @@ print(names)
 names = names.append("Alpha")
 print(names)</code></pre>
                 <div class="spoiler-box" onclick="revealSpoiler(this)">
-<strong>Printed Output:</strong>
-<pre><code>['Echo', 'Kilo', 'Sierra']
+                    <div class="spoiler-overlay">⚠️ Click to reveal answer and trace steps</div>
+                    <strong>Printed Output:</strong>
+                    <pre><code>['Echo', 'Kilo', 'Sierra']
 None</code></pre>
-<strong>Trace Explanation:</strong>
-<ul>
-    <li><code>names.sort()</code> sorts in-place. Result is <code>['Echo', 'Kilo', 'Sierra']</code>.</li>
-    <li><code>names.append("Alpha")</code> appends to the list in-place and returns <code>None</code>. By assigning <code>names = names.append("Alpha")</code>, we store <code>None</code> inside the <code>names</code> variable!</li>
-</ul>
+                    <strong>Trace Explanation:</strong>
+                    <ul>
+                        <li><code>names.sort()</code> sorts in-place. Result is <code>['Echo', 'Kilo', 'Sierra']</code>.</li>
+                        <li><code>names.append("Alpha")</code> appends to the list in-place and returns <code>None</code>. By assigning <code>names = names.append("Alpha")</code>, we store <code>None</code> inside the <code>names</code> variable!</li>
+                    </ul>
                 </div>
             </div>
 
@@ -970,8 +984,9 @@ None</code></pre>
                 <h3>Challenge 9: Loop Accumulation Sum</h3>
                 <p>Write a function <code>sum_multiples(n)</code> that uses a loop to sum all numbers from 1 to <code>n</code> (inclusive) that are divisible by 3 or 5.</p>
                 <div class="spoiler-box" onclick="revealSpoiler(this)">
-<strong>Answer Code:</strong>
-<pre><code class="language-python">def sum_multiples(n):
+                    <div class="spoiler-overlay">⚠️ Click to reveal answer and trace steps</div>
+                    <strong>Answer Code:</strong>
+                    <pre><code class="language-python">def sum_multiples(n):
     total = 0
     for i in range(1, n + 1):
         if i % 3 == 0 or i % 5 == 0:
@@ -985,8 +1000,9 @@ None</code></pre>
                 <h3>Challenge 10: Toggle Button State Callback</h3>
                 <p>Write a function <code>toggle_state()</code>. When run, it checks if <code>btn1["state"]</code> is <code>NORMAL</code> (or <code>"normal"</code>). If it is, change it to <code>DISABLED</code>. Otherwise, change it to <code>NORMAL</code>.</p>
                 <div class="spoiler-box" onclick="revealSpoiler(this)">
-<strong>Answer Code:</strong>
-<pre><code class="language-python">def toggle_state():
+                    <div class="spoiler-overlay">⚠️ Click to reveal answer and trace steps</div>
+                    <strong>Answer Code:</strong>
+                    <pre><code class="language-python">def toggle_state():
     if btn1["state"] == NORMAL:   # or "normal"
         btn1.config(state=DISABLED)
     else:

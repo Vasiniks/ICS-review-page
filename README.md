@@ -123,18 +123,30 @@ submit_button.config(text="Sending...", state=DISABLED)
     ```python
     number_spin = Spinbox(mainframe, textvariable=spin_var, from_=1, to=10, command=my_callback)
     ```
-6.  **Scale**: Sliding bar. Callback requires 1 parameter.
+6.  **Scale**: Sliding bar. Callback function MUST accept 1 parameter (representing the active slider value). If written with 0 arguments, it will crash with a `TypeError` when triggered.
     ```python
     tip_scale = Scale(mainframe, from_=0, to=30, resolution=5, variable=slider_var, orient=HORIZONTAL, command=on_shift)
+
+    # Callback must accept 1 parameter (e.g., 'ignore' or 'val')
+    def on_shift(ignore):
+        current_value = slider_var.get()
     ```
 7.  **Checkbutton**: Checkbox. Binds to `variable`.
     ```python
     tax_check = Checkbutton(mainframe, text="Tax?", variable=check_var, onvalue=1, offvalue=0)
     ```
-8.  **Listbox**: Scrollable select list.
+8.  **Listbox**: Scrollable select list. Use `selection_set(index)` and `selection_clear(index)` to programmatically select or clear items.
     ```python
     todo_listbox = Listbox(mainframe, listvariable=todo_var, height=3)
-    # selected_index = todo_listbox.curselection()[0]
+
+    # Get index selection
+    index = todo_listbox.curselection()[0]
+
+    # Select first item programmatically
+    todo_listbox.selection_set(0)
+
+    # Clear selection programmatically
+    todo_listbox.selection_clear(0)
     ```
 9.  **PhotoImage**: Load PNG/GIF graphics.
     ```python

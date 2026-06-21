@@ -773,13 +773,22 @@ category_menu = OptionMenu(mainframe, choice_var, *choices, command=my_callback)
 number_spin = Spinbox(mainframe, textvariable=spin_var, from_=1, to=10, command=my_callback)</code></pre>
 
                     <p><strong>6. Scale:</strong> Sliding scale selector.</p>
+                    <div class="highlight-box">
+                        <p><strong>The Scale Callback Rule:</strong> When the slider moves, it automatically triggers the function defined in the <code>command=</code> parameter, passing the current slider value as a string parameter. Therefore, the callback function MUST accept exactly 1 argument (a dummy or ignored argument). If you write it with 0 arguments, the app will crash with a <code>TypeError</code>!</p>
+                    </div>
                     <pre><code class="language-python">slider_var = IntVar()
 # from_: starting limit value (note trailing underscore!)
 # to: maximum limit value
 # resolution: step increments (e.g. resolution=5 counts 5, 10, 15...)
 # command: runs when slider shifts (MUST accept 1 parameter!)
 tip_scale = Scale(mainframe, from_=0, to=30, resolution=5,
-                  variable=slider_var, orient=HORIZONTAL, command=on_shift)</code></pre>
+                  variable=slider_var, orient=HORIZONTAL, command=on_shift)
+
+# The callback function MUST accept the parameter (e.g., 'val' or 'ignore')
+def on_shift(ignore):
+    # Retrieve slider value
+    current_value = slider_var.get()
+    print("Scale value shifted to:", current_value)</code></pre>
 
                     <p><strong>7. Checkbutton:</strong> Checkbox element.</p>
                     <pre><code class="language-python">check_var = IntVar() # stores 1 if checked, 0 if unchecked
@@ -787,13 +796,27 @@ tip_scale = Scale(mainframe, from_=0, to=30, resolution=5,
 tax_check = Checkbutton(mainframe, text="Tax?", variable=check_var, onvalue=1, offvalue=0)</code></pre>
 
                     <p><strong>8. Listbox:</strong> Scroll selection list box.</p>
+                    <div class="highlight-box">
+                        <p><strong>Listbox Selection Methods:</strong> Use <code>curselection()</code> to get selection indices, and <code>selection_set(index)</code> or <code>selection_clear(index)</code> to programmatically set or clear selections.</p>
+                    </div>
                     <pre><code class="language-python">todo_var = StringVar()
 todo_var.set(["Work", "Eat", "Sleep"])
 # height: visible row size count
 todo_listbox = Listbox(mainframe, listvariable=todo_var, height=3)
 
-# Reading value trace:
-# index = todo_listbox.curselection()[0] # returns index of chosen item</code></pre>
+# 1. Reading selection:
+# curselection() returns a tuple of selected index numbers (e.g. (0,))
+selected_indices = todo_listbox.curselection()
+if selected_indices:
+    index = selected_indices[0] # get first selected index
+
+# 2. Setting selection programmatically:
+# selection_set(index) highlights/selects the item at the specified index
+todo_listbox.selection_set(0) # Selects first item ('Work')
+
+# 3. Clearing selection programmatically:
+# selection_clear(index) deselects the item at the index
+todo_listbox.selection_clear(0)</code></pre>
 
                     <p><strong>9. PhotoImage:</strong> Load and display image graphics.</p>
                     <pre><code class="language-python"># Load graphic (supports PNG and GIF in python 3)

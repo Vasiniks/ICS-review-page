@@ -147,6 +147,9 @@ submit_button.config(text="Sending...", state=DISABLED)
 
     # Clear selection programmatically
     todo_listbox.selection_clear(0)
+
+    # Deselect all items from index 0 to the end
+    todo_listbox.selection_clear(0, END)
     ```
 9.  **PhotoImage**: Load PNG/GIF graphics.
     ```python

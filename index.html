@@ -816,7 +816,11 @@ todo_listbox.selection_set(0) # Selects first item ('Work')
 
 # 3. Clearing selection programmatically:
 # selection_clear(index) deselects the item at the index
-todo_listbox.selection_clear(0)</code></pre>
+todo_listbox.selection_clear(0)
+
+# 4. Deselecting ALL items at once:
+# selection_clear(0, END) deselects everything from index 0 to the end
+todo_listbox.selection_clear(0, END)</code></pre>
 
                     <p><strong>9. PhotoImage:</strong> Load and display image graphics.</p>
                     <pre><code class="language-python"># Load graphic (supports PNG and GIF in python 3)

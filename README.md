@@ -3,8 +3,8 @@
 An interactive study guide for Python Part 1, Python Part 2, and Tkinter GUI units, designed for paper-based exam preparation.
 
 ## How to View
-To open the study portal locally, double-click:
-*   [**`index.html`**](index.html)
+The study guide is hosted live at:
+*   [**ICS-review-page**](https://vasiniks.github.io/ICS-review-page/)
 
 ## Topics Covered
 *   **Python Part 1**: Variable types, math BEDMAS operators, modulo, f-string padding, standard libraries (`math`, `random`).
